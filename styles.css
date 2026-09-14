@@ -1,0 +1,86 @@
+.path-mod-linkcollection .linkcollection-results {
+    max-width: 960px;
+}
+
+.path-mod-linkcollection .linkcollection-section-title {
+    font-weight: 650;
+}
+
+.path-mod-linkcollection .linkcollection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.path-mod-linkcollection .linkcollection-result {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.path-mod-linkcollection .linkcollection-result-thumb {
+    width: 132px;
+    height: 88px;
+    border-radius: .75rem;
+    overflow: hidden;
+    background: var(--bs-tertiary-bg, #f1f3f4);
+    border: 1px solid var(--bs-border-color, #dadce0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.path-mod-linkcollection .linkcollection-result-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.path-mod-linkcollection .linkcollection-result-placeholder {
+    font-size: 1.75rem;
+    color: var(--bs-secondary-color, #5f6368);
+}
+
+.path-mod-linkcollection .linkcollection-result-domain {
+    color: var(--bs-body-color, #202124);
+    font-size: .875rem;
+    line-height: 1.4;
+}
+
+.path-mod-linkcollection .linkcollection-result-title {
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.path-mod-linkcollection .linkcollection-result-title a {
+    text-decoration: none;
+}
+
+.path-mod-linkcollection .linkcollection-result-title a:hover,
+.path-mod-linkcollection .linkcollection-result-title a:focus {
+    text-decoration: underline;
+}
+
+.path-mod-linkcollection .linkcollection-result-url {
+    font-size: .8rem;
+    color: var(--bs-secondary-color, #5f6368);
+}
+
+.path-mod-linkcollection .linkcollection-result-description {
+    color: var(--bs-secondary-color, #4d5156);
+    line-height: 1.55;
+}
+
+@media (max-width: 575.98px) {
+    .path-mod-linkcollection .linkcollection-result {
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: .75rem;
+    }
+
+    .path-mod-linkcollection .linkcollection-result-thumb {
+        width: 96px;
+        height: 72px;
+    }
+}

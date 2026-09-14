@@ -1,0 +1,65 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_linkcollection/view
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+{{#hassections}}
+<div class="linkcollection-results">
+    {{#sections}}
+        <section class="linkcollection-section mb-5">
+            <h2 class="linkcollection-section-title h4 mb-3">{{name}}</h2>
+            {{#haslinks}}
+                <div class="linkcollection-list">
+                    {{#links}}
+                        <article class="linkcollection-result">
+                            <a class="linkcollection-result-thumb" href="{{url}}" target="_blank" rel="noopener noreferrer" aria-label="{{openlink}}: {{title}}">
+                                {{#hasthumbnail}}
+                                    <img src="{{thumbnail}}" alt="" loading="lazy" decoding="async">
+                                {{/hasthumbnail}}
+                                {{^hasthumbnail}}
+                                    <span class="linkcollection-result-placeholder" aria-hidden="true">↗</span>
+                                {{/hasthumbnail}}
+                            </a>
+                            <div class="linkcollection-result-content">
+                                <div class="linkcollection-result-domain">{{domain}}</div>
+                                <h3 class="linkcollection-result-title h5 mb-1">
+                                    <a href="{{url}}" target="_blank" rel="noopener noreferrer">{{title}}</a>
+                                </h3>
+                                <div class="linkcollection-result-url text-truncate">{{url}}</div>
+                                {{#hasdescription}}
+                                    <p class="linkcollection-result-description mb-0 mt-2">{{description}}</p>
+                                {{/hasdescription}}
+                            </div>
+                        </article>
+                    {{/links}}
+                </div>
+            {{/haslinks}}
+            {{^haslinks}}
+                <div class="text-muted">{{emptysection}}</div>
+            {{/haslinks}}
+        </section>
+    {{/sections}}
+</div>
+{{/hassections}}
+{{^hassections}}
+    <div class="alert alert-info">{{emptycollection}}</div>
+{{/hassections}}
