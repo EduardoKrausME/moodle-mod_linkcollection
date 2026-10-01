@@ -1,28 +1,23 @@
 # mod_linkcollection
 
-A simple Moodle activity for organising several external references inside one course activity.
+Link Collection is a Moodle activity for organising several external references inside a single course activity.
 
-Teachers can create sections such as "Weekly material" and add multiple links. When a link is saved, the plugin can
-fetch the remote page title, description and social image metadata. The image is cached in Moodle file storage and the
-student view renders the links as a compact search-results-style list with the thumbnail on the left.
+## How it works
 
-## Main features
+Teachers create ordered sections such as “Weekly material” and add multiple links to each section. When a link is saved,
+the plugin can fetch the remote page title, description and social-image metadata, cache the thumbnail in Moodle file
+storage and render the student view as a compact search-results-style list.
 
-- Multiple ordered sections inside one activity.
-- Multiple ordered links in each section.
-- Automatic metadata extraction from `title`, `description`, Open Graph and Twitter card tags.
-- Cached thumbnails in Moodle file storage.
-- Manual title and description overrides.
-- One-click metadata refresh for teachers.
-- Moodle cURL security checks are respected for the page and image URLs.
-- Activity completion by view.
-- Backup and restore support.
-- No renderer class; the student view uses a Mustache template.
+## Features
 
-## Compatibility
+- multiple ordered sections inside one activity;
+- multiple ordered links in each section;
+- metadata extraction from title, description, Open Graph and Twitter Card tags;
+- cached thumbnails in Moodle file storage;
+- manual title and description overrides;
+- one-click metadata refresh for teachers;
+- Moodle cURL security checks for page and image URLs;
+- activity completion by view;
+- backup and restore of the activity.
 
-Moodle 4.5 or newer.
-
-## Installation
-
-Copy the `linkcollection` directory to `mod/linkcollection` and complete the Moodle upgrade process.
+The student interface is rendered with a Mustache template.
