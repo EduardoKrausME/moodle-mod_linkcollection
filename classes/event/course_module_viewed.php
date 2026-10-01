@@ -24,6 +24,8 @@
 
 namespace mod_linkcollection\event;
 
+use moodle_url;
+
 /**
  * Class course_module_viewed.
  */
@@ -52,10 +54,10 @@ class course_module_viewed extends \core\event\course_module_viewed {
     /**
      * Method get_url.
      *
-     * @return \moodle_url Return value.
+     * @return moodle_url Return value.
      */
-    public function get_url(): \moodle_url {
-        return new \moodle_url("/mod/linkcollection/view.php", ["id" => $this->contextinstanceid]);
+    public function get_url(): moodle_url {
+        return new moodle_url("/mod/linkcollection/view.php", ["id" => $this->contextinstanceid]);
     }
 
     /**

@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\output\notification;
+use mod_linkcollection\form\link_form;
+use mod_linkcollection\manager;
+
 require_once(__DIR__ . "/../../config.php");
 
 $cmid = required_param("cmid", PARAM_INT);
@@ -41,7 +45,7 @@ $PAGE->set_title(get_string($id ? "editlink" : "addlink", "mod_linkcollection"))
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
-$manager = new \mod_linkcollection\manager($instance, $cm, $context);
+$manager = new manager($instance, $cm, $context);
 $sectionoptions = [];
 foreach ($manager->get_sections() as $section) {
     $sectionoptions[$section->id] = format_string($section->name);
@@ -50,7 +54,7 @@ if (!$sectionoptions) {
     redirect(new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]), get_string("nosections", "mod_linkcollection"));
 }
 
-$form = new \mod_linkcollection\form\link_form(null, ["sections" => $sectionoptions]);
+$form = new link_form(null, ["sections" => $sectionoptions]);
 if ($form->is_cancelled()) {
     redirect(new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]));
 }
@@ -62,15 +66,15 @@ if ($data = $form->get_data()) {
         ? get_string("metadatafetchfailed", "mod_linkcollection")
         : get_string("linkssaved", "mod_linkcollection");
     $type = !empty($data->fetchmetadata) && empty($link->metadatafetched)
-        ? \core\output\notification::NOTIFY_WARNING
-        : \core\output\notification::NOTIFY_SUCCESS;
+        ? notification::NOTIFY_WARNING
+        : notification::NOTIFY_SUCCESS;
     redirect(new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]), $message, null, $type);
 }
 
-$defaults = (object) [
+$defaults = (object)[
     "cmid" => $cm->id,
     "id" => 0,
-    "sectionid" => $sectionid ?: (int) array_key_first($sectionoptions),
+    "sectionid" => $sectionid ?: (int)array_key_first($sectionoptions),
     "url" => "",
     "customtitle" => "",
     "customdescription" => "",

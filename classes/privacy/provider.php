@@ -24,10 +24,12 @@
 
 namespace mod_linkcollection\privacy;
 
+use core_privacy\local\metadata\null_provider;
+
 /**
  * Class provider.
  */
-class provider implements \core_privacy\local\metadata\null_provider {
+class provider implements null_provider {
     /**
      * Method get_reason.
      *

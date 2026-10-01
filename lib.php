@@ -56,7 +56,7 @@ function linkcollection_add_instance(stdClass $data, $mform = null): int {
     $data->timemodified = $now;
     $id = $DB->insert_record("linkcollection", $data);
 
-    $section = (object) [
+    $section = (object)[
         "linkcollectionid" => $id,
         "name" => get_string("defaultsection", "mod_linkcollection"),
         "sortorder" => 10,
@@ -137,7 +137,7 @@ function linkcollection_pluginfile($course, $cm, $context, $filearea, $args, $fo
     require_login($course, true, $cm);
     require_capability("mod/linkcollection:view", $context);
 
-    $itemid = (int) array_shift($args);
+    $itemid = (int)array_shift($args);
     $filename = array_pop($args);
     $filepath = $args ? "/" . implode("/", $args) . "/" : "/";
 

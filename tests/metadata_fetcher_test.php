@@ -24,13 +24,14 @@
 
 namespace mod_linkcollection;
 
-defined('MOODLE_INTERNAL') || die();
+use advanced_testcase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Class metadata_fetcher_test.
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(metadata_fetcher::class)]
-final class metadata_fetcher_test extends \advanced_testcase {
+#[CoversClass(metadata_fetcher::class)]
+final class metadata_fetcher_test extends advanced_testcase {
     /**
      * Method test_parse_open_graph_metadata.
      *

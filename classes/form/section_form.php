@@ -24,14 +24,16 @@
 
 namespace mod_linkcollection\form;
 
-defined('MOODLE_INTERNAL') || die();
+use moodleform;
+
+defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . "/formslib.php");
 
 /**
  * Class section_form.
  */
-class section_form extends \moodleform {
+class section_form extends moodleform {
     /**
      * Method definition.
      *

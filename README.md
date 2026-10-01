@@ -2,7 +2,9 @@
 
 A simple Moodle activity for organising several external references inside one course activity.
 
-Teachers can create sections such as "Weekly material" and add multiple links. When a link is saved, the plugin can fetch the remote page title, description and social image metadata. The image is cached in Moodle file storage and the student view renders the links as a compact search-results-style list with the thumbnail on the left.
+Teachers can create sections such as "Weekly material" and add multiple links. When a link is saved, the plugin can
+fetch the remote page title, description and social image metadata. The image is cached in Moodle file storage and the
+student view renders the links as a compact search-results-style list with the thumbnail on the left.
 
 ## Main features
 

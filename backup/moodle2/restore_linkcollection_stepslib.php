@@ -44,7 +44,7 @@ class restore_linkcollection_activity_structure_step extends restore_activity_st
     protected function process_linkcollection($data): void {
         global $DB;
 
-        $data = (object) $data;
+        $data = (object)$data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
         $data->timecreated = $this->apply_date_offset($data->timecreated);
@@ -63,7 +63,7 @@ class restore_linkcollection_activity_structure_step extends restore_activity_st
     protected function process_linkcollection_section($data): void {
         global $DB;
 
-        $data = (object) $data;
+        $data = (object)$data;
         $oldid = $data->id;
         $data->linkcollectionid = $this->get_new_parentid("linkcollection");
         $data->timecreated = $this->apply_date_offset($data->timecreated);
@@ -81,7 +81,7 @@ class restore_linkcollection_activity_structure_step extends restore_activity_st
     protected function process_linkcollection_link($data): void {
         global $DB;
 
-        $data = (object) $data;
+        $data = (object)$data;
         $oldid = $data->id;
         $data->linkcollectionid = $this->get_new_parentid("linkcollection");
         $data->sectionid = $this->get_new_parentid("linkcollection_section");

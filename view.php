@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_linkcollection\event\course_module_viewed;
+use mod_linkcollection\manager;
+
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
@@ -38,7 +41,7 @@ $PAGE->set_title(format_string($instance->name));
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
-$event = \mod_linkcollection\event\course_module_viewed::create([
+$event = course_module_viewed::create([
     "objectid" => $instance->id,
     "context" => $context,
 ]);
@@ -50,7 +53,7 @@ $event->trigger();
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-$manager = new \mod_linkcollection\manager($instance, $cm, $context);
+$manager = new manager($instance, $cm, $context);
 $data = $manager->get_view_data();
 $data["emptycollection"] = get_string("emptycollection", "mod_linkcollection");
 $data["emptysection"] = get_string("emptysection", "mod_linkcollection");
@@ -66,7 +69,7 @@ if (has_capability("mod/linkcollection:manage", $context)) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($instance->name));
-if (trim((string) $instance->intro) !== "") {
+if (trim((string)$instance->intro) !== "") {
     echo $OUTPUT->box(format_module_intro("linkcollection", $instance, $cm->id), "generalbox mod_introbox");
 }
 echo $OUTPUT->render_from_template("mod_linkcollection/view", $data);

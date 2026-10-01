@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_linkcollection\form\section_form;
+use mod_linkcollection\manager;
+
 require_once(__DIR__ . "/../../config.php");
 
 $cmid = required_param("cmid", PARAM_INT);
@@ -40,8 +43,8 @@ $PAGE->set_title(get_string($id ? "editsection" : "addsection", "mod_linkcollect
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
-$manager = new \mod_linkcollection\manager($instance, $cm, $context);
-$form = new \mod_linkcollection\form\section_form();
+$manager = new manager($instance, $cm, $context);
+$form = new section_form();
 
 if ($form->is_cancelled()) {
     redirect(new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]));
@@ -52,7 +55,7 @@ if ($data = $form->get_data()) {
     redirect(new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]), get_string("linkssaved", "mod_linkcollection"));
 }
 
-$defaults = (object) ["cmid" => $cm->id, "id" => 0, "name" => ""];
+$defaults = (object)["cmid" => $cm->id, "id" => 0, "name" => ""];
 if ($id) {
     $section = $manager->get_section($id);
     $defaults->id = $section->id;

@@ -24,14 +24,16 @@
 
 namespace mod_linkcollection\form;
 
-defined('MOODLE_INTERNAL') || die();
+use moodleform;
+
+defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . "/formslib.php");
 
 /**
  * Class link_form.
  */
-class link_form extends \moodleform {
+class link_form extends moodleform {
     /**
      * Method definition.
      *
@@ -79,9 +81,9 @@ class link_form extends \moodleform {
      */
     public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
-        $url = trim((string) ($data["url"] ?? ""));
+        $url = trim((string)($data["url"] ?? ""));
         if (filter_var($url, FILTER_VALIDATE_URL) === false ||
-            !in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ["http", "https"], true)) {
+            !in_array(strtolower((string)parse_url($url, PHP_URL_SCHEME)), ["http", "https"], true)) {
             $errors["url"] = get_string("invalidurl", "mod_linkcollection");
         }
         return $errors;

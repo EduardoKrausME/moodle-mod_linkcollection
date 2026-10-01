@@ -24,6 +24,13 @@
 
 namespace mod_linkcollection;
 
+use cm_info;
+use context_module;
+use core_text;
+use moodle_url;
+use stdClass;
+use Throwable;
+
 /**
  * Class manager.
  */
@@ -31,30 +38,30 @@ class manager {
     /**
      * Property instance.
      *
-     * @var \stdClass
+     * @var stdClass
      */
-    private \stdClass $instance;
+    private stdClass $instance;
     /**
      * Property cm.
      *
-     * @var \cm_info|\stdClass
+     * @var cm_info|stdClass
      */
-    private \cm_info|\stdClass $cm;
+    private cm_info|stdClass $cm;
     /**
      * Property context.
      *
-     * @var \context_module
+     * @var context_module
      */
-    private \context_module $context;
+    private context_module $context;
 
     /**
      * Method __construct.
      *
-     * @param \stdClass $instance Parameter instance.
+     * @param stdClass $instance Parameter instance.
      * @param mixed $cm Parameter cm.
-     * @param \context_module $context Parameter context.
+     * @param context_module $context Parameter context.
      */
-    public function __construct(\stdClass $instance, $cm, \context_module $context) {
+    public function __construct(stdClass $instance, $cm, context_module $context) {
         $this->instance = $instance;
         $this->cm = $cm;
         $this->context = $context;
@@ -75,9 +82,9 @@ class manager {
      * Method get_section.
      *
      * @param int $id Parameter id.
-     * @return \stdClass Return value.
+     * @return stdClass Return value.
      */
-    public function get_section(int $id): \stdClass {
+    public function get_section(int $id): stdClass {
         global $DB;
         return $DB->get_record("linkcollection_sections", ["id" => $id, "linkcollectionid" => $this->instance->id],
             "*", MUST_EXIST);
@@ -86,26 +93,26 @@ class manager {
     /**
      * Method save_section.
      *
-     * @param \stdClass $data Parameter data.
+     * @param stdClass $data Parameter data.
      * @return int Return value.
      */
-    public function save_section(\stdClass $data): int {
+    public function save_section(stdClass $data): int {
         global $DB;
 
         $now = time();
         if (!empty($data->id)) {
-            $record = $this->get_section((int) $data->id);
+            $record = $this->get_section((int)$data->id);
             $record->name = trim($data->name);
             $record->timemodified = $now;
             $DB->update_record("linkcollection_sections", $record);
-            return (int) $record->id;
+            return (int)$record->id;
         }
 
         $sortorder = $DB->get_field_sql(
             "SELECT COALESCE(MAX(sortorder), 0) + 10 FROM {linkcollection_sections} WHERE linkcollectionid = :id",
             ["id" => $this->instance->id]
         );
-        return $DB->insert_record("linkcollection_sections", (object) [
+        return $DB->insert_record("linkcollection_sections", (object)[
             "linkcollectionid" => $this->instance->id,
             "name" => trim($data->name),
             "sortorder" => $sortorder,
@@ -148,9 +155,9 @@ class manager {
      * Method get_link.
      *
      * @param int $id Parameter id.
-     * @return \stdClass Return value.
+     * @return stdClass Return value.
      */
-    public function get_link(int $id): \stdClass {
+    public function get_link(int $id): stdClass {
         global $DB;
         return $DB->get_record("linkcollection_links", ["id" => $id, "linkcollectionid" => $this->instance->id], "*", MUST_EXIST);
     }
@@ -158,21 +165,21 @@ class manager {
     /**
      * Method save_link.
      *
-     * @param \stdClass $data Parameter data.
+     * @param stdClass $data Parameter data.
      * @return int Return value.
      */
-    public function save_link(\stdClass $data): int {
+    public function save_link(stdClass $data): int {
         global $DB;
 
-        $section = $this->get_section((int) $data->sectionid);
+        $section = $this->get_section((int)$data->sectionid);
         $now = time();
-        $manualtitle = trim((string) ($data->customtitle ?? ""));
-        $manualdescription = trim((string) ($data->customdescription ?? ""));
+        $manualtitle = trim((string)($data->customtitle ?? ""));
+        $manualdescription = trim((string)($data->customdescription ?? ""));
 
         $url = trim($data->url);
         if (!empty($data->id)) {
-            $record = $this->get_link((int) $data->id);
-            $sectionchanged = (int) $record->sectionid !== (int) $section->id;
+            $record = $this->get_link((int)$data->id);
+            $sectionchanged = (int)$record->sectionid !== (int)$section->id;
             $urlchanged = $record->url !== $url;
             $wasmanualtitle = !empty($record->titlemanual);
             $wasmanualdescription = !empty($record->descriptionmanual);
@@ -194,7 +201,7 @@ class manager {
             }
 
             if ($urlchanged) {
-                $record->domain = strtolower((string) parse_url($url, PHP_URL_HOST));
+                $record->domain = strtolower((string)parse_url($url, PHP_URL_HOST));
                 $record->imageurl = "";
                 $record->metadatafetched = 0;
                 get_file_storage()->delete_area_files($this->context->id, "mod_linkcollection", "thumbnail", $record->id);
@@ -204,15 +211,15 @@ class manager {
             }
             $record->timemodified = $now;
             $DB->update_record("linkcollection_links", $record);
-            $id = (int) $record->id;
+            $id = (int)$record->id;
         } else {
-            $id = $DB->insert_record("linkcollection_links", (object) [
+            $id = $DB->insert_record("linkcollection_links", (object)[
                 "linkcollectionid" => $this->instance->id,
                 "sectionid" => $section->id,
                 "url" => $url,
                 "title" => $manualtitle !== "" ? $manualtitle : $this->fallback_title($url),
                 "description" => $manualdescription,
-                "domain" => strtolower((string) parse_url($url, PHP_URL_HOST)),
+                "domain" => strtolower((string)parse_url($url, PHP_URL_HOST)),
                 "imageurl" => "",
                 "titlemanual" => $manualtitle !== "" ? 1 : 0,
                 "descriptionmanual" => $manualdescription !== "" ? 1 : 0,
@@ -242,7 +249,7 @@ class manager {
         $fetcher = new metadata_fetcher();
         try {
             $metadata = $fetcher->fetch($record->url);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
 
@@ -319,9 +326,9 @@ class manager {
                 $items[] = [
                     "title" => $link->title !== "" ? $link->title : $link->url,
                     "url" => $link->url,
-                    "domain" => $link->domain !== "" ? $link->domain : strtolower((string) parse_url($link->url, PHP_URL_HOST)),
-                    "description" => trim((string) $link->description),
-                    "hasdescription" => trim((string) $link->description) !== "",
+                    "domain" => $link->domain !== "" ? $link->domain : strtolower((string)parse_url($link->url, PHP_URL_HOST)),
+                    "description" => trim((string)$link->description),
+                    "hasdescription" => trim((string)$link->description) !== "",
                     "thumbnail" => $thumb ?: "",
                     "hasthumbnail" => $thumb !== null,
                 ];
@@ -358,7 +365,7 @@ class manager {
             return null;
         }
         $file = reset($files);
-        return \moodle_url::make_pluginfile_url(
+        return moodle_url::make_pluginfile_url(
             $this->context->id,
             "mod_linkcollection",
             "thumbnail",
@@ -376,15 +383,15 @@ class manager {
      * @return string Return value.
      */
     private function fallback_title(string $url): string {
-        $path = trim((string) parse_url($url, PHP_URL_PATH), "/");
+        $path = trim((string)parse_url($url, PHP_URL_PATH), "/");
         if ($path !== "") {
             $title = urldecode(basename($path));
             if ($title !== "") {
-                return \core_text::substr($title, 0, 255);
+                return core_text::substr($title, 0, 255);
             }
         }
-        $host = (string) parse_url($url, PHP_URL_HOST);
-        return $host !== "" ? $host : \core_text::substr($url, 0, 255);
+        $host = (string)parse_url($url, PHP_URL_HOST);
+        return $host !== "" ? $host : core_text::substr($url, 0, 255);
     }
 
     /**

@@ -24,6 +24,14 @@
 
 namespace mod_linkcollection;
 
+use core\files\curl_security_helper;
+use core_text;
+use curl;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+use moodle_exception;
+
 /**
  * Class metadata_fetcher.
  */
@@ -47,15 +55,15 @@ class metadata_fetcher {
 
         $url = trim($url);
         if (!$this->is_valid_url($url)) {
-            throw new \moodle_exception("invalidurl", "mod_linkcollection");
+            throw new moodle_exception("invalidurl", "mod_linkcollection");
         }
 
-        $securityhelper = new \core\files\curl_security_helper();
+        $securityhelper = new curl_security_helper();
         if ($securityhelper->url_is_blocked($url)) {
-            throw new \moodle_exception("blockedurl", "mod_linkcollection");
+            throw new moodle_exception("blockedurl", "mod_linkcollection");
         }
 
-        $curl = new \curl();
+        $curl = new curl();
         $curl->setHeader([
             "Accept: text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
             "Accept-Language: " . str_replace("_", "-", current_language()) . ",en;q=0.5",
@@ -70,11 +78,11 @@ class metadata_fetcher {
         $html = $curl->get($url, [], $options);
         $info = $curl->get_info();
 
-        if ($curl->get_errno() || $html === false || empty($info["http_code"]) || (int) $info["http_code"] >= 400) {
-            throw new \moodle_exception("remotefetchfailed", "mod_linkcollection");
+        if ($curl->get_errno() || $html === false || empty($info["http_code"]) || (int)$info["http_code"] >= 400) {
+            throw new moodle_exception("remotefetchfailed", "mod_linkcollection");
         }
 
-        $contenttype = strtolower((string) ($info["content_type"] ?? ""));
+        $contenttype = strtolower((string)($info["content_type"] ?? ""));
         if ($contenttype !== "" &&
             !str_contains($contenttype, "text/html") &&
             !str_contains($contenttype, "application/xhtml+xml")) {
@@ -85,7 +93,7 @@ class metadata_fetcher {
             $html = substr($html, 0, self::PAGE_MAX_BYTES);
         }
 
-        $finalurl = !empty($info["url"]) && $this->is_valid_url((string) $info["url"]) ? (string) $info["url"] : $url;
+        $finalurl = !empty($info["url"]) && $this->is_valid_url((string)$info["url"]) ? (string)$info["url"] : $url;
         return $this->parse_html($html, $finalurl);
     }
 
@@ -104,12 +112,12 @@ class metadata_fetcher {
             return null;
         }
 
-        $securityhelper = new \core\files\curl_security_helper();
+        $securityhelper = new curl_security_helper();
         if ($securityhelper->url_is_blocked($url)) {
             return null;
         }
 
-        $curl = new \curl();
+        $curl = new curl();
         $curl->setHeader(["Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"]);
         $data = $curl->get($url, [], [
             "CURLOPT_TIMEOUT" => 8,
@@ -124,7 +132,7 @@ class metadata_fetcher {
             return null;
         }
 
-        $mime = strtolower(trim(explode(";", (string) ($info["content_type"] ?? ""))[0]));
+        $mime = strtolower(trim(explode(";", (string)($info["content_type"] ?? ""))[0]));
         $allowed = [
             "image/jpeg" => "jpg",
             "image/png" => "png",
@@ -159,7 +167,7 @@ class metadata_fetcher {
         }
 
         $previous = libxml_use_internal_errors(true);
-        $document = new \DOMDocument();
+        $document = new DOMDocument();
         $loaded = $document->loadHTML($html, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR);
         libxml_clear_errors();
         libxml_use_internal_errors($previous);
@@ -168,10 +176,10 @@ class metadata_fetcher {
             return $metadata;
         }
 
-        $xpath = new \DOMXPath($document);
+        $xpath = new DOMXPath($document);
         $values = [];
         foreach ($xpath->query("//meta[@content]") as $node) {
-            if (!$node instanceof \DOMElement) {
+            if (!$node instanceof DOMElement) {
                 continue;
             }
             $key = strtolower(trim($node->getAttribute("property")));
@@ -204,7 +212,7 @@ class metadata_fetcher {
 
         if ($image === "") {
             foreach ($xpath->query("//link[@href]") as $node) {
-                if (!$node instanceof \DOMElement) {
+                if (!$node instanceof DOMElement) {
                     continue;
                 }
                 $rel = strtolower(trim($node->getAttribute("rel")));
@@ -233,8 +241,8 @@ class metadata_fetcher {
      */
     private function fallback_metadata(string $url): array {
         $parts = parse_url($url);
-        $domain = strtolower((string) ($parts["host"] ?? ""));
-        $path = trim((string) ($parts["path"] ?? ""), "/");
+        $domain = strtolower((string)($parts["host"] ?? ""));
+        $path = trim((string)($parts["path"] ?? ""), "/");
         $title = $path !== "" ? urldecode(basename($path)) : $domain;
         if ($title === "") {
             $title = $url;
@@ -258,7 +266,7 @@ class metadata_fetcher {
     private function clean_text(string $value, int $maxlength): string {
         $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, "UTF-8");
         $value = preg_replace("/\\s+/u", " ", trim($value));
-        return \core_text::substr((string) $value, 0, $maxlength);
+        return core_text::substr((string)$value, 0, $maxlength);
     }
 
     /**
@@ -271,7 +279,7 @@ class metadata_fetcher {
         if ($url === "" || filter_var($url, FILTER_VALIDATE_URL) === false) {
             return false;
         }
-        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
         return in_array($scheme, ["http", "https"], true);
     }
 
@@ -304,7 +312,7 @@ class metadata_fetcher {
             return $origin . $this->normalise_path($candidate);
         }
 
-        $basepath = (string) ($base["path"] ?? "/");
+        $basepath = (string)($base["path"] ?? "/");
         $directory = rtrim(str_replace("\\", "/", dirname($basepath)), "/");
         return $origin . $this->normalise_path(($directory === "" ? "" : $directory) . "/" . $candidate);
     }

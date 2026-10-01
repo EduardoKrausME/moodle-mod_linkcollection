@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\output\notification;
+use mod_linkcollection\manager;
+
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
@@ -45,7 +48,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 $PAGE->navbar->add(get_string("managecollection", "mod_linkcollection"));
 
-$manager = new \mod_linkcollection\manager($instance, $cm, $context);
+$manager = new manager($instance, $cm, $context);
 $manageurl = new moodle_url("/mod/linkcollection/manage.php", ["id" => $cm->id]);
 
 if ($action !== "") {
@@ -65,7 +68,7 @@ if ($action !== "") {
                 $manageurl,
                 get_string($ok ? "metadatarefreshed" : "metadatafetchfailed", "mod_linkcollection"),
                 null,
-                $ok ? \core\output\notification::NOTIFY_SUCCESS : \core\output\notification::NOTIFY_WARNING
+                $ok ? notification::NOTIFY_SUCCESS : notification::NOTIFY_WARNING
             );
             break;
         case "deletelink":
@@ -201,7 +204,7 @@ foreach ($sections as $section) {
             echo html_writer::start_div("flex-grow-1 overflow-hidden");
             echo html_writer::tag("div", format_string($link->title !== "" ? $link->title : $link->url), ["class" => "fw-bold"]);
             echo html_writer::tag("div", s($link->url), ["class" => "small text-muted text-truncate"]);
-            if (trim((string) $link->description) !== "") {
+            if (trim((string)$link->description) !== "") {
                 echo html_writer::tag("div", s($link->description), ["class" => "small mt-1"]);
             }
             echo html_writer::end_div();
