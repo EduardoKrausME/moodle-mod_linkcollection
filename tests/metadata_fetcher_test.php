@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Class metadata_fetcher_test.
  *
- * @covers \\mod_linkcollection\\metadata_fetcher
+ * @covers \mod_linkcollection\metadata_fetcher
  */
 #[CoversClass(metadata_fetcher::class)]
 final class metadata_fetcher_test extends advanced_testcase {
