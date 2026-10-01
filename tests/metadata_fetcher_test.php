@@ -38,6 +38,7 @@ final class metadata_fetcher_test extends advanced_testcase {
      * Method test_parse_open_graph_metadata.
      *
      * @return void Return value.
+     * @covers \\mod_linkcollection\\metadata_fetcher::parse_html
      */
     public function test_parse_open_graph_metadata(): void {
         $fetcher = new metadata_fetcher();
@@ -60,6 +61,7 @@ final class metadata_fetcher_test extends advanced_testcase {
      * Method test_parse_title_and_description_fallbacks.
      *
      * @return void Return value.
+     * @covers \\mod_linkcollection\\metadata_fetcher::parse_html
      */
     public function test_parse_title_and_description_fallbacks(): void {
         $fetcher = new metadata_fetcher();
