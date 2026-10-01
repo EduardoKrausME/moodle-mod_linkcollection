@@ -31,10 +31,10 @@
                     <div class="linkcollection-list">
                         {{#links}}
                             <article class="linkcollection-result">
-                                <a class="linkcollection-result-thumb" href="{{url}}" target="_blank"
+                                <a class="linkcollection-result-thumb" href="{{{url}}}" target="_blank"
                                    rel="noopener noreferrer" aria-label="{{openlink}}: {{title}}">
                                     {{#hasthumbnail}}
-                                        <img src="{{thumbnail}}" alt="" loading="lazy" decoding="async">
+                                        <img src="{{{thumbnail}}}" alt="" loading="lazy" decoding="async">
                                     {{/hasthumbnail}}
                                     {{^hasthumbnail}}
                                         <span class="linkcollection-result-placeholder" aria-hidden="true">↗</span>
@@ -43,7 +43,7 @@
                                 <div class="linkcollection-result-content">
                                     <div class="linkcollection-result-domain">{{domain}}</div>
                                     <h3 class="linkcollection-result-title h5 mb-1">
-                                        <a href="{{url}}" target="_blank" rel="noopener noreferrer">{{title}}</a>
+                                        <a href="{{{url}}}" target="_blank" rel="noopener noreferrer">{{title}}</a>
                                     </h3>
                                     <div class="linkcollection-result-url text-truncate">{{url}}</div>
                                     {{#hasdescription}}
