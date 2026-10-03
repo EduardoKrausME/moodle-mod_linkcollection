@@ -128,11 +128,29 @@ class metadata_fetcher {
         ]);
         $info = $curl->get_info();
 
-        if ($curl->get_errno() || $data === false || $info["http_code"] ?? 0 >= 400 || strlen($data) > self::IMAGE_MAX_BYTES) {
+        if (
+            $curl->get_errno()
+            || $data === false
+            || (int)($info["http_code"] ?? 0) >= 400
+            || strlen($data) > self::IMAGE_MAX_BYTES
+        ) {
             return null;
         }
 
+        $detectedmime = "";
+        if (function_exists("getimagesizefromstring")) {
+            $imageinfo = @getimagesizefromstring($data);
+            if ($imageinfo === false) {
+                return null;
+            }
+            $detectedmime = strtolower((string)($imageinfo["mime"] ?? ""));
+        }
+
         $mime = strtolower(trim(explode(";", (string)($info["content_type"] ?? ""))[0]));
+        if ($mime === "") {
+            $mime = $detectedmime;
+        }
+
         $allowed = [
             "image/jpeg" => "jpg",
             "image/png" => "png",
@@ -140,9 +158,6 @@ class metadata_fetcher {
             "image/webp" => "webp",
         ];
         if (!isset($allowed[$mime])) {
-            return null;
-        }
-        if (function_exists("getimagesizefromstring") && @getimagesizefromstring($data) === false) {
             return null;
         }
 

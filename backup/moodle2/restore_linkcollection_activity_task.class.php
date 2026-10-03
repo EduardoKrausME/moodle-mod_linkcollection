@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
+require_once("{$CFG->dirroot}/mod/linkcollection/backup/moodle2/restore_linkcollection_stepslib.php");
+
 /**
  * Class restore_linkcollection_activity_task.
  */

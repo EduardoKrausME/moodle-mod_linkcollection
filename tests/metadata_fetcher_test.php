@@ -77,4 +77,31 @@ final class metadata_fetcher_test extends advanced_testcase {
         $this->assertSame("docs.example.org", $result["domain"]);
         $this->assertSame("", $result["imageurl"]);
     }
+    /**
+     * Ensure a successful HTTP image response is accepted.
+     *
+     * curl::mock_response() sets the mocked HTTP status to 200 but does not provide a Content-Type,
+     * so this also verifies the byte-based MIME fallback.
+     *
+     * @return void
+     * @covers \\mod_linkcollection\\metadata_fetcher::fetch_image
+     */
+    public function test_fetch_image_accepts_successful_mocked_response(): void {
+        global $CFG;
+
+        require_once($CFG->libdir . "/filelib.php");
+
+        $image = base64_decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+        );
+        \curl::mock_response($image);
+
+        $result = (new metadata_fetcher())->fetch_image("https://example.com/image.png");
+
+        $this->assertNotNull($result);
+        $this->assertSame($image, $result["content"]);
+        $this->assertSame("image/png", $result["mimetype"]);
+        $this->assertSame("png", $result["extension"]);
+    }
+
 }
