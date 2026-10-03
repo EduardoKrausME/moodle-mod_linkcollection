@@ -77,6 +77,7 @@ final class metadata_fetcher_test extends advanced_testcase {
         $this->assertSame("docs.example.org", $result["domain"]);
         $this->assertSame("", $result["imageurl"]);
     }
+
     /**
      * Ensure a successful HTTP image response is accepted.
      *
