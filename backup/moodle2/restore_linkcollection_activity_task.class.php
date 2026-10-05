@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-require_once("{$CFG->dirroot}/mod/linkcollection/backup/moodle2/restore_linkcollection_stepslib.php");
+require_once($CFG->dirroot . '/mod/linkcollection/backup/moodle2/restore_linkcollection_stepslib.php');
 
 /**
  * Class restore_linkcollection_activity_task.
@@ -35,7 +35,7 @@ class restore_linkcollection_activity_task extends restore_activity_task {
      *
      * @return void Return value.
      */
-    protected function define_my_settings(): void {
+    protected function define_my_settings() {
     }
 
     /**
@@ -43,7 +43,7 @@ class restore_linkcollection_activity_task extends restore_activity_task {
      *
      * @return void Return value.
      */
-    protected function define_my_steps(): void {
+    protected function define_my_steps() {
         $this->add_step(new restore_linkcollection_activity_structure_step("linkcollection_structure", "linkcollection.xml"));
     }
 
@@ -52,7 +52,7 @@ class restore_linkcollection_activity_task extends restore_activity_task {
      *
      * @return array Return value.
      */
-    public static function define_decode_contents(): array {
+    public static function define_decode_contents() {
         return [];
     }
 
@@ -61,7 +61,25 @@ class restore_linkcollection_activity_task extends restore_activity_task {
      *
      * @return array Return value.
      */
-    public static function define_decode_rules(): array {
+    public static function define_decode_rules() {
+        return [];
+    }
+
+    /**
+     * Define the restore log rules for this activity.
+     *
+     * @return array Restore log rules.
+     */
+    public static function define_restore_log_rules() {
+        return [];
+    }
+
+    /**
+     * Define the restore log rules for course-level logs.
+     *
+     * @return array Restore log rules.
+     */
+    public static function define_restore_log_rules_for_course() {
         return [];
     }
 }
